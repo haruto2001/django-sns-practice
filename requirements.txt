@@ -1,0 +1,5 @@
+Django
+psycopg2
+
+# ユーザ認証の実装に必要
+django-allauth
