@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
+from django.urls import reverse_lazy
 
 from .models import Post
 
@@ -23,7 +24,21 @@ class MyPost(LoginRequiredMixin, ListView):
         # 自分の投稿に限定
         return Post.objects.filter(user=self.request.user)
 
+
 class DetailPost(LoginRequiredMixin, DetailView):
     """投稿詳細ページ"""
     model = Post
     template_name = 'detail.html'
+
+
+class CreatePost(LoginRequiredMixin, CreateView):
+    """投稿フォーム"""
+    model = Post
+    template_name = 'create.html'
+    fields = ['title', 'content']
+    success_url = reverse_lazy('mypost')
+
+    def form_valid(self, form):
+        """投稿ユーザとリクエストユーザを紐付け"""
+        form.instance.user = self.request.user
+        return super().form_valid(form)
