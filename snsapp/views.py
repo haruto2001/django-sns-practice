@@ -1,10 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import LiveView
+from django.views.generic import ListView
 
 from .models import Post
 
 
-class Home(LoginRequiredMixin, LiveView):
+class Home(LoginRequiredMixin, ListView):
     """HOMEで自分以外のユーザの投稿をリスト表示"""
     model = Post
     template_name = 'list.html'
@@ -14,7 +14,7 @@ class Home(LoginRequiredMixin, LiveView):
         return Post.objects.exclude(user=self.request.user)
 
 
-class MyPost(LoginRequiredMixin, LiveView):
+class MyPost(LoginRequiredMixin, ListView):
     """自分の投稿のみ表示"""
     model = Post
     template_name = 'list.html'
