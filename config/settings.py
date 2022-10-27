@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'snsapp.apps.SnsappConfig',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 ]
 
 MIDDLEWARE = [
@@ -119,3 +122,20 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# 認証系の設定
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+ACCOUNT_AUTHENTICATION_METHOD = 'username'  # ログイン認証方法をユーザ名に設定
+ACCOUNT_USERNAME_REQUIRED = True  # ユーザ名の登録は必須
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # ユーザ登録時にメール認証は行わない
+ACCOUNT_EMAIL_REQUIRED = True  # メールアドレスの登録は必須
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = 'home'  #リダイレクト先をhomeページに設定。詳細後述
+ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
