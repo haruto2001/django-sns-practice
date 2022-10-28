@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTextMixin
 from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
 
@@ -29,6 +29,24 @@ class DetailPost(LoginRequiredMixin, DetailView):
     """投稿詳細ページ"""
     model = Post
     template_name = 'detail.html'
+
+
+class UpdatePost(LoginRequiredMixin, UserPassesTextMixin, UpdateView):
+    """投稿編集ページ"""
+    model = Post
+    template_name = 'update.html'
+    fields = ['title', 'content']
+
+    def get_success_url(self, **kwargs):
+        """編集完了後の遷移先"""
+        pk = self.kwargs["pk"]
+        return reverse_lazy('detail', kwargs={"pk": pk})
+
+    def test_func(self, **kwargs):
+        """アクセスできるユーザを制限"""
+        pk = self.kwargs["pk"]
+        post = Post.objects.get(pk=pk)
+        return (post.user == self.request.user)
 
 
 class CreatePost(LoginRequiredMixin, CreateView):
