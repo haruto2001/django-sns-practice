@@ -49,7 +49,7 @@ class UpdatePost(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return (post.user == self.request.user)
 
 
-class Deletepost(LoginRequiredMixin, UserPassesTestMixin, DetailPost):
+class DeletePost(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """投稿削除ページ"""
     model = Post
     template_name = 'delete.html'
