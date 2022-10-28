@@ -1,5 +1,5 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTextMixin
-from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import ListView, DetailView, UpdateView, CreateView
 from django.urls import reverse_lazy
 
 from .models import Post
@@ -31,7 +31,7 @@ class DetailPost(LoginRequiredMixin, DetailView):
     template_name = 'detail.html'
 
 
-class UpdatePost(LoginRequiredMixin, UserPassesTextMixin, UpdateView):
+class UpdatePost(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """投稿編集ページ"""
     model = Post
     template_name = 'update.html'
