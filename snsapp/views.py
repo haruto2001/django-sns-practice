@@ -5,7 +5,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 
-from .models import Post
+from .models import Post, Connection
 
 
 class Home(LoginRequiredMixin, ListView):
@@ -114,17 +114,41 @@ class LikeDetail(LikeBase):
         return redirect('detail', pk)
 
 
+class FollowBase(LoginRequiredMixin, View):
+    """フォローのベース．リダイレクト先は継承先で設定"""
+    def get(self, request, *args, **kwargs):
+        # ユーザの特定
+        pk = self.kwargs['pk']
+        target_user = Post.objects.get(pk=pk).user
+
+        # ユーザ情報からコネクション情報を取得．存在しなければ作成
+        my_connection = Connection.objects.get_or_create(user=self.request.user)
+
+        # フォローテーブル内に既にユーザが存在する場合
+        if target_user in my_connection[0].following.all():
+            # テーブルからユーザを削除
+            obj = my_connection[0].following.remove(target_user)
+        # フォローテーブル内にユーザが存在しない場合
+        else:
+        # テーブルにユーザを追加
+            obj = my_connection[0].following.add(target_user)
+            return obj
 
 
+class FollowHome(FollowBase):
+    """HOMEページでフォローした場合"""
+    def get(self, request, *args, **kwargs):
+        # FollowBaseでリターンしたobj情報を継承
+        super().get(request, *args, **kwargs)
+        # homeにリダイレクト
+        return redirect('home')
 
 
-
-
-
-
-
-
-
-
-
-
+class FollowDetail(FollowBase):
+    """詳細ページでフォローした場合"""
+    def get(self, request, *args, **kwargs):
+        # FollwBaseでリターンしたobj情報を継承
+        super().get(request, *args, **kwargs)
+        pk = self.kwargs['pk']
+        # detailにリダイレクト
+        return redirect('detail', pk)
