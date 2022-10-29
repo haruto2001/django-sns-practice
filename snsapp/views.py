@@ -17,6 +17,12 @@ class Home(LoginRequiredMixin, ListView):
         # リクエストユーザのみ除外
         return Post.objects.exclude(user=self.request.user)
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        #get_or_createにしないとサインアップ時オブジェクトがないためエラーになる
+        context['connection'] = Connection.objects.get_or_create(user=self.request.user)
+        return context
+
 
 class MyPost(LoginRequiredMixin, ListView):
     """自分の投稿のみ表示"""
@@ -32,6 +38,11 @@ class DetailPost(LoginRequiredMixin, DetailView):
     """投稿詳細ページ"""
     model = Post
     template_name = 'detail.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['connection'] = Connection.objects.get_or_create(user=self.request.user)
+        return context
 
 
 class UpdatePost(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -152,3 +163,32 @@ class FollowDetail(FollowBase):
         pk = self.kwargs['pk']
         # detailにリダイレクト
         return redirect('detail', pk)
+
+
+class FollowList(LoginRequiredMixin, ListView):
+    """フォローしたユーザの投稿をリスト表示"""
+    model = Post
+    template_name = 'list.html'
+
+    def get_queryset(self):
+        """フォローリスト内にユーザが含まれている場合のみクエリセットを返す"""
+        my_connection = Connection.objects.get_or_create(user=self.request.user)
+        all_follow = my_connection[0].following.all()
+        # 投稿ユーザがフォローしているユーザに含まれている場合オブジェクトを返す．
+        return Post.objects.filter(use__in=all_follow)
+
+    def get_context_data(self, *args, **kwargs):
+        """コネクションに関するオブジェクト情報をコンテクストに追加"""
+        context = super().get_context_data(*args, **kwargs)
+        # コンテクストに追加
+        context['connection'] = Connection.objects.get_or_create(user=self.request.user)
+        return context
+
+
+
+
+
+
+
+
+
