@@ -175,7 +175,7 @@ class FollowList(LoginRequiredMixin, ListView):
         my_connection = Connection.objects.get_or_create(user=self.request.user)
         all_follow = my_connection[0].following.all()
         # 投稿ユーザがフォローしているユーザに含まれている場合オブジェクトを返す．
-        return Post.objects.filter(use__in=all_follow)
+        return Post.objects.filter(user__in=all_follow)
 
     def get_context_data(self, *args, **kwargs):
         """コネクションに関するオブジェクト情報をコンテクストに追加"""
