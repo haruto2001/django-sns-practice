@@ -1,12 +1,14 @@
 import uuid
 
+from django_cleanup import cleanup
+
 from django.db import models
 from django.contrib.auth.models import User
 
 
 def image_directory_path(instance, filename):
     """ユニークなIDを生成して元のファイル名の拡張子を結合"""
-    return f'images/{str(uuid.uuid4())}.{filename.split('.')[-1]}'
+    return f'images/{str(uuid.uuid4())}.{filename.split(".")[-1]}'
 
 
 class Post(models.Model):

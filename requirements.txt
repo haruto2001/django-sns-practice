@@ -6,3 +6,6 @@ django-allauth
 
 # 画像ファイルを扱うために必要
 Pillow
+
+# 更新時に古いファイルを自動で削除するために必要
+django-cleanup
