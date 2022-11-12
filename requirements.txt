@@ -9,3 +9,6 @@ Pillow
 
 # 更新時に古いファイルを自動で削除するために必要
 django-cleanup
+
+# 画像の保存時に自動的にリサイズするために必要
+django-stdimage

@@ -10,7 +10,7 @@
        <p>コメント：{{object.content}}</p>
        <!-- 画像がアップロードされている場合のみ表示 -->
        {% if object.image %}
-       <img src="{{ object.image.url }}" width="300" height=auto>
+       <a fref="{{ object.image.url }}"><img src="{{ object.image.thumbnail.url }}"/></a>
        <br><br>
        {% endif %}
 

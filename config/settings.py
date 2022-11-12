@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'stdimage',
     'django_cleanup.apps.CleanupConfig',
 ]
 
