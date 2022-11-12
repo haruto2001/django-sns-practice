@@ -49,7 +49,7 @@ class UpdatePost(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """投稿編集ページ"""
     model = Post
     template_name = 'update.html'
-    fields = ['title', 'content']
+    fields = ['title', 'content', 'image']
 
     def get_success_url(self, **kwargs):
         """編集完了後の遷移先"""
@@ -80,7 +80,7 @@ class CreatePost(LoginRequiredMixin, CreateView):
     """投稿フォーム"""
     model = Post
     template_name = 'create.html'
-    fields = ['title', 'content']
+    fields = ['title', 'content', 'image']
     success_url = reverse_lazy('mypost')
 
     def form_valid(self, form):

@@ -8,6 +8,11 @@
        <p>タイトル：{{object.title}}</p>
        <p>投稿者：{{object.user}}</p>
        <p>コメント：{{object.content}}</p>
+       <!-- 画像がアップロードされている場合のみ表示 -->
+       {% if object.image %}
+       <a fref="{{ object.image.url }}"><img src="{{ object.image.thumbnail.url }}"/></a>
+       <br><br>
+       {% endif %}
 
        {% if object.user == request.user %}  <!-- リクエストユーザと投稿者が等しい場合のみリンクを表示 -->
        <a href="{% url 'update' object.pk %}" class="btn btn-primary ms-3" tabindex="-1" role="button" aria-disabled="true">編集</a>
