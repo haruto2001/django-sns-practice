@@ -14,7 +14,8 @@
        <br><br>
        {% endif %}
 
-       {% if object.user == request.user %}  <!-- リクエストユーザと投稿者が等しい場合のみリンクを表示 -->
+       <!-- リクエストユーザと投稿者が等しい場合のみリンクを表示 -->
+       {% if object.user == request.user %}
        <a href="{% url 'update' object.pk %}" class="btn btn-primary ms-3" tabindex="-1" role="button" aria-disabled="true">編集</a>
        <a href="{% url 'delete' object.pk %}" class="btn btn-danger ms-3" tabindex="-1" role="button" aria-disabled=true>削除</a>
        {% endif %}
@@ -30,7 +31,6 @@
        {% else %}
        <a href="{% url 'follow-detail' object.pk %}" class="btn btn-primary ms-3" tabindex="-1" role="button" aria-disabled="true">フォロー</a>
        {% endif %}
-
    </div>
 </div>
 {% endblock content %}
