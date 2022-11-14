@@ -31,6 +31,21 @@ class Post(models.Model):
         ordering = ["-created_at"]  # 投稿順にクエリを取得
 
 
+class Comment(models.Model):
+    """投稿に紐付いたコメント"""
+    name = models.CharField('名前', max_length=255, default='名無し')
+    text = models.TextField('コメント')
+    target = models.ForeignKey(Post, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.text[:20]
+
+    class Meta:
+        ordering = ["-created_at"]  # 投稿順にクエリを取得
+
+
+
 class Connection(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     following = models.ManyToManyField(User, related_name='following', blank=True)

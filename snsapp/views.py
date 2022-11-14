@@ -5,7 +5,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 
-from .models import Post, Connection
+from .models import Post, Comment, Connection
 
 
 class Home(LoginRequiredMixin, ListView):
@@ -41,6 +41,7 @@ class DetailPost(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        context['comments'] = Comment.objects.filter(target=self.kwargs['pk'])
         context['connection'] = Connection.objects.get_or_create(user=self.request.user)
         return context
 
@@ -123,6 +124,18 @@ class LikeDetail(LikeBase):
         pk = self.kwargs['pk']
         # detailにリダイレクト
         return redirect('detail', pk)
+
+
+class CreateComment(LoginRequiredMixin, CreateView):
+    """コメント投稿フォーム"""
+    model = Comment
+    template_name = 'comment.html'
+    fields = ['name', 'text', 'target']
+
+    def get_success_url(self, **kwargs):
+        """編集完了後の遷移先"""
+        pk = self.kwargs['pk']
+        return reverse_lazy('detail', kwargs={"pk": pk})
 
 
 class FollowBase(LoginRequiredMixin, View):
