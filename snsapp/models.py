@@ -33,8 +33,13 @@ class Post(models.Model):
 
 class Comment(models.Model):
     """投稿に紐付いたコメント"""
+<<<<<<< Updated upstream
     name = models.CharField('名前', max_length=255, default='名無し')
     text = models.TextField('コメント')
+=======
+    name = models.CharField('Name', max_length=255)
+    text = models.TextField('Comment')
+>>>>>>> Stashed changes
     target = models.ForeignKey(Post, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
