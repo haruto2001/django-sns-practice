@@ -132,12 +132,6 @@ class CreateComment(LoginRequiredMixin, CreateView):
     template_name = 'comment.html'
     fields = ['name', 'text', 'target']
 
-<<<<<<< Updated upstream
-    def get_success_url(self, **kwargs):
-        """編集完了後の遷移先"""
-        pk = self.kwargs['pk']
-        return reverse_lazy('detail', kwargs={"pk": pk})
-=======
     # フォームの内容にコメントの対象を付加して保存
     def form_valid(self, form):
         post_pk = self.kwargs['pk']
@@ -147,7 +141,6 @@ class CreateComment(LoginRequiredMixin, CreateView):
         comment.target = post
         comment.save()
         return redirect('detail', pk=post_pk)
->>>>>>> Stashed changes
 
 
 class FollowBase(LoginRequiredMixin, View):
