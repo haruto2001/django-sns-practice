@@ -1,10 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 
+from .forms import CommentCreateForm
 from .models import Post, Comment, Connection
 
 
@@ -130,12 +131,16 @@ class CreateComment(LoginRequiredMixin, CreateView):
     """コメント投稿フォーム"""
     model = Comment
     template_name = 'comment.html'
-    fields = ['name', 'text', 'target']
+    form_class = CommentCreateForm
 
-    def get_success_url(self, **kwargs):
-        """編集完了後の遷移先"""
-        pk = self.kwargs['pk']
-        return reverse_lazy('detail', kwargs={"pk": pk})
+    # フォームの内容にコメントの対象を付加して保存
+    def form_valid(self, form):
+        post_pk = self.kwargs['pk']
+        post = get_object_or_404(Post, pk=post_pk)
+        comment = form.save(commit=False)
+        comment.target = post
+        comment.save()
+        return redirect('detail', pk=post_pk)
 
 
 class FollowBase(LoginRequiredMixin, View):
