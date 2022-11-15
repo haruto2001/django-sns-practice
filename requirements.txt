@@ -12,3 +12,6 @@ django-cleanup
 
 # 画像の保存時に自動的にリサイズするために必要
 django-stdimage
+
+# フォームのデザインを整えるために必要
+django-widget-tweaks

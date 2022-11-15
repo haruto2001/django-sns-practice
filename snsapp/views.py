@@ -1,11 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 
-from .models import Post, Connection
+from .forms import PostForm, CommentCreateForm
+from .models import Post, Comment, Connection
 
 
 class Home(LoginRequiredMixin, ListView):
@@ -41,6 +42,7 @@ class DetailPost(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        context['comments'] = Comment.objects.filter(target=self.kwargs['pk'])
         context['connection'] = Connection.objects.get_or_create(user=self.request.user)
         return context
 
@@ -49,7 +51,7 @@ class UpdatePost(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """投稿編集ページ"""
     model = Post
     template_name = 'update.html'
-    fields = ['title', 'content', 'image']
+    form_class = PostForm
 
     def get_success_url(self, **kwargs):
         """編集完了後の遷移先"""
@@ -80,7 +82,7 @@ class CreatePost(LoginRequiredMixin, CreateView):
     """投稿フォーム"""
     model = Post
     template_name = 'create.html'
-    fields = ['title', 'content', 'image']
+    form_class = PostForm
     success_url = reverse_lazy('mypost')
 
     def form_valid(self, form):
@@ -123,6 +125,22 @@ class LikeDetail(LikeBase):
         pk = self.kwargs['pk']
         # detailにリダイレクト
         return redirect('detail', pk)
+
+
+class CreateComment(LoginRequiredMixin, CreateView):
+    """コメント投稿フォーム"""
+    model = Comment
+    template_name = 'comment.html'
+    form_class = CommentCreateForm
+
+    # フォームの内容にコメントの対象を付加して保存
+    def form_valid(self, form):
+        post_pk = self.kwargs['pk']
+        post = get_object_or_404(Post, pk=post_pk)
+        comment = form.save(commit=False)
+        comment.target = post
+        comment.save()
+        return redirect('detail', pk=post_pk)
 
 
 class FollowBase(LoginRequiredMixin, View):
