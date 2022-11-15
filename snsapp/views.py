@@ -5,7 +5,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 
-from .forms import CommentCreateForm
+from .forms import PostForm, CommentCreateForm
 from .models import Post, Comment, Connection
 
 
@@ -51,7 +51,7 @@ class UpdatePost(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """投稿編集ページ"""
     model = Post
     template_name = 'update.html'
-    fields = ['title', 'content', 'image']
+    form_class = PostForm
 
     def get_success_url(self, **kwargs):
         """編集完了後の遷移先"""
@@ -82,7 +82,7 @@ class CreatePost(LoginRequiredMixin, CreateView):
     """投稿フォーム"""
     model = Post
     template_name = 'create.html'
-    fields = ['title', 'content', 'image']
+    form_class = PostForm
     success_url = reverse_lazy('mypost')
 
     def form_valid(self, form):
