@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'snsapp.apps.SnsappConfig',
+    'widget_tweaks',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

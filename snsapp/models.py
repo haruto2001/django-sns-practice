@@ -33,8 +33,8 @@ class Post(models.Model):
 
 class Comment(models.Model):
     """投稿に紐付いたコメント"""
-    name = models.CharField('名前', max_length=255, default='名無し')
-    text = models.TextField('コメント')
+    name = models.CharField('Name', max_length=255, default='名無し')
+    text = models.TextField('Comment')
     target = models.ForeignKey(Post, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
