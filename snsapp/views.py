@@ -138,6 +138,7 @@ class CreateComment(LoginRequiredMixin, CreateView):
         post_pk = self.kwargs['pk']
         post = get_object_or_404(Post, pk=post_pk)
         comment = form.save(commit=False)
+        comment.name = self.request.user
         comment.target = post
         comment.save()
         return redirect('detail', pk=post_pk)

@@ -13,4 +13,4 @@ class CommentCreateForm(forms.ModelForm):
     """コメントフォーム"""
     class Meta:
         model = Comment
-        exclude = ['target', 'created_at']
+        exclude = ['name', 'target', 'created_at']
