@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'snsapp.apps.SnsappConfig',
+    'accounts.apps.AccountsConfig',
     'widget_tweaks',
     'allauth',
     'allauth.account',
@@ -131,6 +132,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# 使用するカスタムユーザモデル
+AUTH_USER_MODEL = 'accounts.User'
 
 # 認証系の設定
 AUTHENTICATION_BACKENDS = (
